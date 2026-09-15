@@ -10,6 +10,7 @@ from llm_project_generator.providers import ProviderSpec
 TEMPLATE_MANIFEST: tuple[PurePosixPath, ...] = (
     PurePosixPath(".env.example"),
     PurePosixPath(".gitignore"),
+    PurePosixPath("LICENSE"),
     PurePosixPath("README.md"),
     PurePosixPath("pyproject.toml"),
     PurePosixPath("src/app/__init__.py"),

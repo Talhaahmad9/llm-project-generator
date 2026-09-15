@@ -41,6 +41,7 @@ def test_generates_project_and_renders_name(tmp_path: Path) -> None:
     assert (destination / "tests" / "test_main.py").is_file()
     assert (destination / ".env.example").is_file()
     assert (destination / ".gitignore").is_file()
+    assert (destination / "LICENSE").is_file()
     assert not (destination / ".env").exists()
 
 

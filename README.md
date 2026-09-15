@@ -38,6 +38,7 @@ The command creates a new destination containing the reviewed Groq chatbot:
 ```text
 .env.example
 .gitignore
+LICENSE
 README.md
 pyproject.toml
 src/app/
@@ -97,7 +98,11 @@ The generator and generated application use deterministic validation, configurat
 
 ## Limitations
 
-V1 generates only the live-verified Groq chatbot. It does not generate other providers, overwrite existing destinations, delete output, run `uv sync` for the user, or execute the generated chatbot's tests. Licensing has not yet been finalized; the repository's `LICENSE` file is currently empty.
+V1 generates only the live-verified Groq chatbot. It does not generate other providers, overwrite existing destinations, delete output, run `uv sync` for the user, or execute the generated chatbot's tests.
+
+## License
+
+This project and its generated projects are licensed under the MIT License. Copyright (c) 2026 Talha Ahmad.
 
 ## Further reading
 

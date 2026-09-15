@@ -9,6 +9,7 @@ def test_groq_chatbot_template_contains_reviewed_assets() -> None:
     assert template.is_dir()
     assert (template / ".env.example").is_file()
     assert (template / ".gitignore").is_file()
+    assert (template / "LICENSE").is_file()
     assert (template / "pyproject.toml").is_file()
     assert (template / "src" / "app" / "main.py").is_file()
     assert (template / "tests" / "test_main.py").is_file()

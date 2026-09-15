@@ -83,3 +83,7 @@ The separation between the terminal entry point, chat orchestration, and client 
 - [Pydantic](https://docs.pydantic.dev/)
 - [Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)
 - [Pydantic AI](https://ai.pydantic.dev/)
+
+## License
+
+This project is licensed under the MIT License. Copyright (c) 2026 Talha Ahmad.
