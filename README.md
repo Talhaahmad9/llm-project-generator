@@ -13,23 +13,44 @@ V1 supports only Groq. Groq is included because this template has been live veri
 
 The generator itself has no runtime dependencies. It uses the standard Python library and includes its template assets in the installed package.
 
-## Use from a clone
+## Quick start
+
+### PyPI with uvx
+
+After the package is published on PyPI, run it without permanently installing it:
+
+```bash
+uvx llm-project-generator init my-chatbot --provider groq
+```
+
+### Persistent installation
+
+After PyPI publication, install the command for repeated use:
+
+```bash
+uv tool install llm-project-generator
+llm-project-generator init my-chatbot --provider groq
+```
+
+### Tagged GitHub release
+
+The currently valid tagged fallback is:
+
+```bash
+uvx --from git+https://github.com/Talhaahmad9/llm-project-generator.git@v0.1.0 llm-project-generator init my-chatbot --provider groq
+```
+
+This is longer because uv must be told both the Git source and the executable name. `v0.1.0` contains the same Groq generator functionality, while `v0.1.1` prepares the package metadata for PyPI.
+
+### Development from a clone
 
 From the repository root:
 
 ```bash
 uv sync --dev
 uv run llm-project-generator --help
-uv run llm-project-generator init <destination> --provider groq
-```
-
-For example:
-
-```bash
 uv run llm-project-generator init my-chatbot --provider groq
 ```
-
-The package is not currently published on PyPI. A locally built wheel can be run with `uvx` when needed by passing the wheel path to `uvx`.
 
 ## What it creates
 
