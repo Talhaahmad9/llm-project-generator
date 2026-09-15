@@ -41,7 +41,7 @@ jobs:
           expected_sdist="dist/llm_project_generator-0.1.1.tar.gz"
           test -f "$expected_wheel"
           test -f "$expected_sdist"
-          test "$(find dist -maxdepth 1 -type f | wc -l)" -eq 2
+          test "$(find dist -maxdepth 1 -type f \( -name '*.whl' -o -name '*.tar.gz' \) | wc -l)" -eq 2
           for file in dist/*; do
             test "$file" = "$expected_wheel" || test "$file" = "$expected_sdist"
           done
