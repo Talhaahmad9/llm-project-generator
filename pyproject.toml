@@ -1,7 +1,27 @@
 [project]
 name = "llm-project-generator"
-version = "0.1.0"
-description = "A small, installable LLM project generator"
+version = "0.1.1"
+description = "Generate a tested Groq terminal chatbot project"
+authors = [
+    { name = "Talha Ahmad" },
+]
+keywords = [
+    "llm",
+    "groq",
+    "pydantic-ai",
+    "cli",
+    "project-generator",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Code Generators",
+]
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -15,6 +35,11 @@ dev = [
 
 [project.scripts]
 llm-project-generator = "llm_project_generator.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Talhaahmad9/llm-project-generator"
+Repository = "https://github.com/Talhaahmad9/llm-project-generator"
+Issues = "https://github.com/Talhaahmad9/llm-project-generator/issues"
 
 [build-system]
 requires = ["uv_build>=0.12.13,<0.13"]
