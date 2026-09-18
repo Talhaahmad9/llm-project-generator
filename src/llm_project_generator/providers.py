@@ -7,9 +7,14 @@ from llm_project_generator.errors import UnsupportedProviderError
 class ProviderSpec:
     name: str
     template_name: str
+    display_name: str
 
 
-GROQ = ProviderSpec(name="groq", template_name="providers/groq")
+GROQ = ProviderSpec(
+    name="groq",
+    template_name="providers/groq",
+    display_name="Groq",
+)
 PROVIDERS: tuple[ProviderSpec, ...] = (GROQ,)
 
 
