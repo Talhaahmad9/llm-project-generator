@@ -74,7 +74,7 @@ def test_interactive_menu_uses_provider_display_name(
     assert "1. Human Label" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("selection", ["", "abc", "0", "-1", "3"])
+@pytest.mark.parametrize("selection", ["", "abc", "0", "-1", "4"])
 def test_invalid_interactive_selection_prompts_again(
     selection: str,
     tmp_path: Path,
@@ -155,3 +155,16 @@ def test_interactive_menu_lists_providers_in_order(
     assert cli._select_provider() is not None
     output = capsys.readouterr().out
     assert output.index("1. Groq") < output.index("2. Google Gemini")
+    assert output.index("2. Google Gemini") < output.index("3. OpenAI")
+
+
+def test_interactive_selection_three_generates_openai(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("sys.stdin", InteractiveInput("3\n"))
+    destination = tmp_path / "openai-chatbot"
+
+    assert main(["init", str(destination)]) == 0
+    assert (destination / "src" / "app" / "provider.py").is_file()
+    assert "OPENAI_API_KEY" in (destination / ".env.example").read_text()

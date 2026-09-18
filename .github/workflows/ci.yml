@@ -43,7 +43,7 @@ jobs:
       - name: Generate and test provider templates
         shell: bash
         run: |
-          for provider in groq google; do
+          for provider in groq google openai; do
             ci_project_dir="${RUNNER_TEMP}/llm-project-generator-${provider}-${GITHUB_RUN_ID}"
             test ! -e "$ci_project_dir"
             uv run llm-project-generator init "$ci_project_dir" --provider "$provider"

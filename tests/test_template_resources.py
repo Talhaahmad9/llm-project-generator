@@ -4,7 +4,7 @@ from pathlib import Path, PurePosixPath
 import pytest
 
 from llm_project_generator.errors import TemplateError
-from llm_project_generator.providers import GOOGLE, GROQ
+from llm_project_generator.providers import GOOGLE, GROQ, OPENAI
 from llm_project_generator import template_store
 
 
@@ -29,6 +29,17 @@ def test_loading_google_returns_manifest_union() -> None:
     assert PurePosixPath(".gitignore") in loaded
     assert PurePosixPath(".env") not in loaded
     assert PurePosixPath("src/app/provider.py") in loaded
+
+
+def test_loading_openai_returns_manifest_union() -> None:
+    loaded = template_store.load_template_files(OPENAI)
+
+    assert set(loaded) == set(template_store.COMMON_MANIFEST) | set(
+        template_store.OPENAI_MANIFEST
+    )
+    assert PurePosixPath(".env.example") in loaded
+    assert PurePosixPath(".gitignore") in loaded
+    assert PurePosixPath(".env") not in loaded
 
 
 def test_duplicate_destination_paths_are_rejected(
