@@ -15,7 +15,12 @@ GROQ = ProviderSpec(
     template_name="providers/groq",
     display_name="Groq",
 )
-PROVIDERS: tuple[ProviderSpec, ...] = (GROQ,)
+GOOGLE = ProviderSpec(
+    name="google",
+    template_name="providers/google",
+    display_name="Google Gemini",
+)
+PROVIDERS: tuple[ProviderSpec, ...] = (GROQ, GOOGLE)
 
 
 def resolve_provider(name: str) -> ProviderSpec:

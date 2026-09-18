@@ -35,8 +35,19 @@ GROQ_MANIFEST: tuple[PurePosixPath, ...] = (
     PurePosixPath("tests/test_provider.py"),
 )
 
+GOOGLE_MANIFEST: tuple[PurePosixPath, ...] = (
+    PurePosixPath(".env.example"),
+    PurePosixPath("README.md"),
+    PurePosixPath("pyproject.toml"),
+    PurePosixPath("src/app/config.py"),
+    PurePosixPath("src/app/provider.py"),
+    PurePosixPath("tests/test_config.py"),
+    PurePosixPath("tests/test_provider.py"),
+)
+
 _PROVIDER_MANIFESTS: dict[str, tuple[PurePosixPath, ...]] = {
     "providers/groq": GROQ_MANIFEST,
+    "providers/google": GOOGLE_MANIFEST,
 }
 
 

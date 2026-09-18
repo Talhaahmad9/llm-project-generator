@@ -40,20 +40,20 @@ jobs:
       - name: Build distributions
         run: uv build --no-sources
 
-      - name: Generate and test Groq template
+      - name: Generate and test provider templates
         shell: bash
         run: |
-          ci_project_dir="${RUNNER_TEMP}/llm-project-generator-${GITHUB_RUN_ID}"
-          test ! -e "$ci_project_dir"
-          uv run llm-project-generator init "$ci_project_dir" --provider groq
-          test -f "$ci_project_dir/.env.example"
-          test -f "$ci_project_dir/.gitignore"
-          test -f "$ci_project_dir/LICENSE"
-          test -f "$ci_project_dir/README.md"
-          test -f "$ci_project_dir/pyproject.toml"
-          test -d "$ci_project_dir/src"
-          test -d "$ci_project_dir/tests"
-          test ! -e "$ci_project_dir/.env"
-          cd "$ci_project_dir"
-          uv sync --dev
-          uv run pytest
+          for provider in groq google; do
+            ci_project_dir="${RUNNER_TEMP}/llm-project-generator-${provider}-${GITHUB_RUN_ID}"
+            test ! -e "$ci_project_dir"
+            uv run llm-project-generator init "$ci_project_dir" --provider "$provider"
+            test -f "$ci_project_dir/.env.example"
+            test -f "$ci_project_dir/.gitignore"
+            test -f "$ci_project_dir/LICENSE"
+            test -f "$ci_project_dir/README.md"
+            test -f "$ci_project_dir/pyproject.toml"
+            test -d "$ci_project_dir/src"
+            test -d "$ci_project_dir/tests"
+            test ! -e "$ci_project_dir/.env"
+            (cd "$ci_project_dir" && uv sync --dev && uv run pytest)
+          done
