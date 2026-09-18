@@ -31,14 +31,20 @@ jobs:
       - name: Run root tests
         run: uv run pytest
 
+      - name: Read project version
+        shell: bash
+        run: |
+          project_version="$(uv run python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
+          echo "PROJECT_VERSION=$project_version" >> "$GITHUB_ENV"
+
       - name: Build distributions
         run: uv build --no-sources
 
       - name: Verify distributions and smoke-test wheel
         shell: bash
         run: |
-          expected_wheel="dist/llm_project_generator-0.1.1-py3-none-any.whl"
-          expected_sdist="dist/llm_project_generator-0.1.1.tar.gz"
+          expected_wheel="dist/llm_project_generator-${PROJECT_VERSION}-py3-none-any.whl"
+          expected_sdist="dist/llm_project_generator-${PROJECT_VERSION}.tar.gz"
           test -f "$expected_wheel"
           test -f "$expected_sdist"
           test "$(find dist -maxdepth 1 -type f \( -name '*.whl' -o -name '*.tar.gz' \) | wc -l)" -eq 2
@@ -49,25 +55,29 @@ jobs:
           test ! -e dist/llm_project_generator-0.1.0.tar.gz
 
           uvx --from "$expected_wheel" llm-project-generator --help
-          ci_project_dir="${RUNNER_TEMP}/llm-project-generator-${GITHUB_RUN_ID}"
-          test ! -e "$ci_project_dir"
-          uvx --from "$expected_wheel" llm-project-generator init "$ci_project_dir" --provider groq
-          test -f "$ci_project_dir/LICENSE"
-          test -f "$ci_project_dir/README.md"
-          test -f "$ci_project_dir/pyproject.toml"
-          test -f "$ci_project_dir/.env.example"
-          test -f "$ci_project_dir/.gitignore"
-          test -d "$ci_project_dir/src"
-          test -d "$ci_project_dir/tests"
-          test ! -e "$ci_project_dir/.env"
+          providers=(groq google openai anthropic)
+          for provider in "${providers[@]}"; do
+            ci_project_dir="${RUNNER_TEMP}/llm-project-generator-${GITHUB_RUN_ID}-${provider}"
+            test ! -e "$ci_project_dir"
+            uvx --from "$expected_wheel" llm-project-generator init "$ci_project_dir" --provider "$provider"
+            test -f "$ci_project_dir/LICENSE"
+            test -f "$ci_project_dir/README.md"
+            test -f "$ci_project_dir/pyproject.toml"
+            test -f "$ci_project_dir/.env.example"
+            test -f "$ci_project_dir/.gitignore"
+            test -d "$ci_project_dir/src"
+            test -d "$ci_project_dir/tests"
+            test ! -e "$ci_project_dir/.env"
+            (cd "$ci_project_dir" && uv sync --dev && uv run pytest)
+          done
 
       - name: Upload distributions # v7.0.1
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: python-package-distributions
           path: |
-            dist/llm_project_generator-0.1.1-py3-none-any.whl
-            dist/llm_project_generator-0.1.1.tar.gz
+            dist/llm_project_generator-${{ env.PROJECT_VERSION }}-py3-none-any.whl
+            dist/llm_project_generator-${{ env.PROJECT_VERSION }}.tar.gz
           if-no-files-found: error
           retention-days: 3
 
