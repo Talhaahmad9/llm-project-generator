@@ -8,6 +8,7 @@ def test_resolves_groq_exactly() -> None:
     provider = resolve_provider("groq")
     assert provider.name == "groq"
     assert provider.template_name == "providers/groq"
+    assert provider.display_name == "Groq"
 
 
 @pytest.mark.parametrize("name", ["Groq", "GROQ", "openai", ""])
