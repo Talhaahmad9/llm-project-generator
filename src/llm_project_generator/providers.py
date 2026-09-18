@@ -25,7 +25,12 @@ OPENAI = ProviderSpec(
     template_name="providers/openai",
     display_name="OpenAI",
 )
-PROVIDERS: tuple[ProviderSpec, ...] = (GROQ, GOOGLE, OPENAI)
+ANTHROPIC = ProviderSpec(
+    name="anthropic",
+    template_name="providers/anthropic",
+    display_name="Anthropic Claude",
+)
+PROVIDERS: tuple[ProviderSpec, ...] = (GROQ, GOOGLE, OPENAI, ANTHROPIC)
 
 
 def resolve_provider(name: str) -> ProviderSpec:
