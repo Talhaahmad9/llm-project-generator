@@ -1,16 +1,20 @@
 [project]
 name = "llm-project-generator"
-version = "0.1.1"
-description = "Generate a tested Groq terminal chatbot project"
+version = "0.2.0"
+description = "Generate tested terminal LLM chatbot projects for Groq, Google Gemini, OpenAI, and Anthropic Claude"
 authors = [
     { name = "Talha Ahmad" },
 ]
 keywords = [
     "llm",
-    "groq",
+    "chatbot",
     "pydantic-ai",
     "cli",
     "project-generator",
+    "groq",
+    "gemini",
+    "openai",
+    "anthropic",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

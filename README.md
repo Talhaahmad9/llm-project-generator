@@ -1,132 +1,172 @@
-# llm-project-generator
+<div align="center">
 
-`llm-project-generator` creates a ready-to-run LLM chatbot project from a reviewed, packaged template.
+# ⚡ LLM Project Generator
 
-## Current status
+### One command. Four provider templates. Tested chatbot foundations.
 
-V1 supports only Groq. Groq is included because this template has been live verified. Other providers are not advertised or generated yet.
+[![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyPI](https://img.shields.io/pypi/v/llm-project-generator?logo=pypi&logoColor=white)](https://pypi.org/project/llm-project-generator/)
+[![CI](https://github.com/Talhaahmad9/llm-project-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/Talhaahmad9/llm-project-generator/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Talhaahmad9/llm-project-generator/blob/main/LICENSE)
+[![Status: Alpha](https://img.shields.io/badge/status-alpha-orange)](https://github.com/Talhaahmad9/llm-project-generator)
 
-## Requirements
+**Groq · Google Gemini · OpenAI · Anthropic Claude**
 
-- Python 3.13 or newer
-- [uv](https://docs.astral.sh/uv/)
+Built by **Talha Ahmad**
 
-The generator itself has no runtime dependencies. It uses the standard Python library and includes its template assets in the installed package.
+</div>
+
+## Overview
+
+`llm-project-generator` creates a focused, standalone terminal chatbot project from a packaged provider template. Each generated project combines one provider SDK, Pydantic AI, Pydantic Settings, validated schemas, provider-specific configuration, and deterministic tests around a shared application structure.
+
+It generates one-provider projects; it does not perform runtime multi-provider routing.
 
 ## Quick start
 
-### PyPI with uvx
+Requirements: Python 3.13 or newer and [uv](https://docs.astral.sh/uv/getting-started/installation/).
 
-After the package is published on PyPI, run it without permanently installing it:
+The shortest path opens an interactive provider menu in a terminal:
+
+```bash
+uvx llm-project-generator init my-chatbot
+```
+
+For automation, select a provider explicitly. Non-interactive environments require `--provider`:
 
 ```bash
 uvx llm-project-generator init my-chatbot --provider groq
+uvx llm-project-generator init my-chatbot --provider google
+uvx llm-project-generator init my-chatbot --provider openai
+uvx llm-project-generator init my-chatbot --provider anthropic
 ```
 
-### Persistent installation
-
-After PyPI publication, install the command for repeated use:
+For a persistent installation:
 
 ```bash
 uv tool install llm-project-generator
-llm-project-generator init my-chatbot --provider groq
+llm-project-generator init my-chatbot
 ```
 
-### Tagged GitHub release
+Multi-provider generation is available in version `0.2.0` and later.
 
-The currently valid tagged fallback is:
+## Providers
+
+| CLI name | Display name | Environment variable | Default model | Generated dependency | Deterministic verification | Live verification |
+| --- | --- | --- | --- | --- | --- | --- |
+| `groq` | Groq | `GROQ_API_KEY` | `groq:openai/gpt-oss-120b` | `pydantic-ai-slim[groq]` | Passed | Passed |
+| `google` | Google Gemini | `GOOGLE_API_KEY` | `google:gemini-3.5-flash-lite` | `pydantic-ai-slim[google]` | Passed | Pending billing/support |
+| `openai` | OpenAI | `OPENAI_API_KEY` | `openai:gpt-5.4-mini` | `pydantic-ai-slim[openai]` | Passed | Pending billing |
+| `anthropic` | Anthropic Claude | `ANTHROPIC_API_KEY` | `anthropic:claude-sonnet-5` | `pydantic-ai-slim[anthropic]` | Passed | Pending billing |
+
+Deterministic verification covers generation, imports, configuration, mocked provider construction, and shared chatbot behavior. Live verification covers real authentication, model availability, and provider responses. Only Groq has completed both so far.
+
+## Use a generated project
 
 ```bash
-uvx --from git+https://github.com/Talhaahmad9/llm-project-generator.git@v0.1.0 llm-project-generator init my-chatbot --provider groq
-```
-
-This is longer because uv must be told both the Git source and the executable name. `v0.1.0` contains the same Groq generator functionality, while `v0.1.1` prepares the package metadata for PyPI.
-
-### Development from a clone
-
-From the repository root:
-
-```bash
-uv sync --dev
-uv run llm-project-generator --help
-uv run llm-project-generator init my-chatbot --provider groq
-```
-
-## What it creates
-
-The command creates a new destination containing the reviewed Groq chatbot:
-
-```text
-.env.example
-.gitignore
-LICENSE
-README.md
-pyproject.toml
-src/app/
-tests/
-```
-
-The generated project keeps the `app` Python package, deterministic fake-model tests, the `llm-chat` console entry point, and the default model `groq:openai/gpt-oss-120b`.
-
-## Run a generated chatbot
-
-Enter the generated project and install its dependencies:
-
-```bash
-cd <destination>
+cd my-chatbot
 uv sync
 cp .env.example .env
 ```
 
-Edit `.env` and add your own `GROQ_API_KEY`. `LLM_MODEL` is optional and can override the default model. Then start the chatbot:
+Open `.env` in an editor and add the required API key for the provider you selected. `LLM_MODEL` is an optional model override; when it is omitted, the selected provider's default model is used. The generator never requests or copies API keys. The generated `.env` does not exist until you create it and is ignored by Git.
+
+Run the chatbot and its deterministic tests:
 
 ```bash
 uv run llm-chat
-```
-
-`.env.example` is generated as a placeholder. `.env` is excluded by the template's `.gitignore` and is never generated or copied by this project. Never put a real key in source control.
-
-## Project names and destinations
-
-The distribution name comes from the destination directory name. Names may contain ASCII letters, numbers, periods, underscores, and hyphens; they must begin and end with a letter or number. Spaces and invalid boundary characters are rejected. Period, underscore, and hyphen runs are normalized to one lowercase hyphen: `My_Project` becomes `my-project`.
-
-The destination's parent directory must already exist. The destination itself must not exist, even if it is empty. Existing files and directories are never overwritten, and V1 has no force or delete behavior. An operating-system write failure may leave partial output in the destination.
-
-## Development and testing
-
-Install development dependencies and run the root test suite with:
-
-```bash
-uv sync --dev
 uv run pytest
 ```
 
-The root tests exercise provider resolution, resource loading, generation, and CLI behavior. The chatbot tests are packaged template assets; they are not collected from their packaged location by the generator's root test suite.
+## Features
 
-## Layout
+- Interactive or explicit provider selection.
+- Provider-isolated generated dependencies.
+- Pydantic validation for settings and chat messages.
+- Conversation history within a terminal session.
+- Deterministic fake-model and mocked provider tests.
+- Safe destination policy with no force, overwrite, or delete behavior.
+- Packaged templates available from the installed wheel.
+- No generator runtime dependencies.
+
+## Architecture
 
 ```text
-src/llm_project_generator/                    generator package
-src/llm_project_generator/project_templates/  packaged template assets
-tests/                                        generator tests
+                         llm-project-generator
+                                  |
+                    +-------------+-------------+
+                    |                           |
+          Common chatbot resources      Provider overlay
+                    |                           |
+                    +-------------+-------------+
+                                  |
+                         Generated project
+                                  |
+                  config -> provider -> LLM API
 ```
 
-## Security
+Common resources own the terminal loop, chat orchestration, reply execution, schemas, exceptions, and shared tests. Each overlay owns its environment example, README, dependency metadata, provider configuration, provider construction, and provider tests.
 
-The generator does not request, create, inspect, or copy API keys. It creates only `.env.example`; users supply their own secret in a local `.env`, which is excluded from version control.
+## Generated structure
 
-The generator and generated application use deterministic validation, configuration, file selection, and error handling. LLM responses are probabilistic output from the selected provider and should not be treated as deterministic application logic or as a security boundary.
+```text
+my-chatbot/
+|-- .env.example
+|-- .gitignore
+|-- LICENSE
+|-- README.md
+|-- pyproject.toml
+|-- src/
+|   `-- app/
+|       |-- __init__.py
+|       |-- chat.py
+|       |-- client.py
+|       |-- config.py
+|       |-- exceptions.py
+|       |-- main.py
+|       |-- provider.py
+|       `-- schemas.py
+`-- tests/
+```
 
-## Limitations
+## Safety
 
-V1 generates only the live-verified Groq chatbot. It does not generate other providers, overwrite existing destinations, delete output, run `uv sync` for the user, or execute the generated chatbot's tests.
+The destination parent must already exist, and the destination itself must not exist. Existing files and directories are never overwritten; there is no force or delete behavior.
 
-## License
+The generator never creates `.env`, requests API keys, or copies secrets. Generated configuration uses `SecretStr`. Model output is probabilistic and untrusted; it is not an authorization or security boundary.
 
-This project and its generated projects are licensed under the MIT License. Copyright (c) 2026 Talha Ahmad.
+Automated generated tests use fake models and mocks and do not make real provider requests.
 
-## Further reading
+## Project names and destinations
 
-- [uv documentation](https://docs.astral.sh/uv/)
-- [Groq documentation](https://console.groq.com/docs)
-- [Pydantic AI documentation](https://ai.pydantic.dev/)
+Project names may contain ASCII letters, numbers, dots, underscores, and hyphens. They must begin and end with a letter or number. Runs of dots, underscores, and hyphens are normalized into lowercase hyphens for distribution metadata. The destination parent must exist, and the destination itself must not already exist. A filesystem failure during generation can leave a partial destination; inspect it or remove it before retrying.
+
+## Verification status
+
+The four provider implementations have deterministic generated-suite coverage. Groq has also completed live verification. Google Gemini, OpenAI, and Anthropic Claude live checks remain pending billing/support availability, so this preview does not claim all providers are production-ready or live-verified.
+
+## Development
+
+```bash
+git clone https://github.com/Talhaahmad9/llm-project-generator.git
+cd llm-project-generator
+uv sync --dev
+uv run pytest
+uv build --no-sources
+```
+
+CI generates and tests all four provider projects without provider credentials.
+
+## Limitations and roadmap
+
+This preview provides a terminal interface only, generates one provider per project, requires Python 3.13+, does not create API keys, does not overwrite existing destinations, and does not make live calls in automated tests. Three live-verification checks are pending.
+
+The next milestones are to complete remaining live verification and prepare the criteria for `1.0.0`. Future work such as FastAPI or RAG belongs to separate product milestones; it is not part of the generated chatbot today.
+
+## Contributing
+
+Create a focused branch, run the root tests and build locally, and keep provider resources explicitly allowlisted. Pull requests should preserve deterministic tests and must not add credentials or live API calls.
+
+## Author and license
+
+Built by [Talha Ahmad](https://github.com/Talhaahmad9). Licensed under the [MIT License](https://github.com/Talhaahmad9/llm-project-generator/blob/main/LICENSE).
