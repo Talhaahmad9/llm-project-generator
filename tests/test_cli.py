@@ -74,7 +74,7 @@ def test_interactive_menu_uses_provider_display_name(
     assert "1. Human Label" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("selection", ["", "abc", "0", "-1", "4"])
+@pytest.mark.parametrize("selection", ["", "abc", "0", "-1", "5"])
 def test_invalid_interactive_selection_prompts_again(
     selection: str,
     tmp_path: Path,
@@ -156,6 +156,7 @@ def test_interactive_menu_lists_providers_in_order(
     output = capsys.readouterr().out
     assert output.index("1. Groq") < output.index("2. Google Gemini")
     assert output.index("2. Google Gemini") < output.index("3. OpenAI")
+    assert output.index("3. OpenAI") < output.index("4. Anthropic Claude")
 
 
 def test_interactive_selection_three_generates_openai(
@@ -168,3 +169,15 @@ def test_interactive_selection_three_generates_openai(
     assert main(["init", str(destination)]) == 0
     assert (destination / "src" / "app" / "provider.py").is_file()
     assert "OPENAI_API_KEY" in (destination / ".env.example").read_text()
+
+
+def test_interactive_selection_four_generates_anthropic(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("sys.stdin", InteractiveInput("4\n"))
+    destination = tmp_path / "anthropic-chatbot"
+
+    assert main(["init", str(destination)]) == 0
+    assert (destination / "src" / "app" / "provider.py").is_file()
+    assert "ANTHROPIC_API_KEY" in (destination / ".env.example").read_text()

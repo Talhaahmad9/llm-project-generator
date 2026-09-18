@@ -1,0 +1,28 @@
+[project]
+name = "__PROJECT_DISTRIBUTION_NAME__"
+version = "0.1.0"
+description = "A production-minded terminal LLM chatbot"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic>=2.13.5",
+    "pydantic-ai-slim[anthropic]>=2.43.0",
+    "pydantic-settings>=2.15.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[project.scripts]
+llm-chat = "app.main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.13,<0.13"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "app"
