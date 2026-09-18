@@ -7,7 +7,7 @@ from llm_project_generator.providers import resolve_provider
 def test_resolves_groq_exactly() -> None:
     provider = resolve_provider("groq")
     assert provider.name == "groq"
-    assert provider.template_name == "groq_chatbot"
+    assert provider.template_name == "providers/groq"
 
 
 @pytest.mark.parametrize("name", ["Groq", "GROQ", "openai", ""])

@@ -1,19 +1,7 @@
 from pydantic_ai import Agent, ModelMessage 
-from pydantic_ai.models.groq import GroqModel
-from pydantic_ai.providers.groq import GroqProvider
 from pydantic_ai.exceptions import AgentRunError
 
-from app.config import Settings
 from app.exceptions import LLMError
-
-def create_agent(settings: Settings) -> Agent[None, str]:
-    api_key = settings.groq_api_key.get_secret_value()
-    model_name = settings.llm_model.removeprefix("groq:")
-    
-    provider = GroqProvider(api_key=api_key)
-    model = GroqModel(model_name, provider=provider)
-    
-    return Agent(model, output_type=str)
 
 async def generate_reply(
     agent: Agent[None, str],

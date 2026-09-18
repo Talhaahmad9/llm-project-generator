@@ -217,7 +217,6 @@ def test_main_reports_invalid_configuration(
 
     assert exc_info.value.code == 2
     assert (
-        "Configuration error: check "
-        "GROQ_API_KEY and LLM_MODEL."
+        "Configuration error: check your environment settings."
         in output
     )
