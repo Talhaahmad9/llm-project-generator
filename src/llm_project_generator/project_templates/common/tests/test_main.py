@@ -207,7 +207,7 @@ def test_main_reports_invalid_configuration(
 ) -> None:
     monkeypatch.setattr(
         "app.main.Settings",
-        lambda: Settings(groq_api_key=" "),
+        lambda: Settings.model_validate({}),
     )
 
     with pytest.raises(SystemExit) as exc_info:
