@@ -38,6 +38,9 @@ def test_generates_project_and_renders_name(tmp_path: Path) -> None:
     pyproject_text = (destination / "pyproject.toml").read_text(encoding="utf-8")
     assert "__PROJECT_DISTRIBUTION_NAME__" not in pyproject_text
     assert (destination / "src" / "app" / "main.py").is_file()
+    assert (destination / "src" / "app" / "client.py").is_file()
+    assert (destination / "src" / "app" / "provider.py").is_file()
+    assert (destination / "src" / "app" / "config.py").is_file()
     assert (destination / "tests" / "test_main.py").is_file()
     assert (destination / ".env.example").is_file()
     assert (destination / ".gitignore").is_file()

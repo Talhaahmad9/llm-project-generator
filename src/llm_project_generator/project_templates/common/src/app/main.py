@@ -6,7 +6,7 @@ from pydantic_ai import Agent, ModelMessage
 from app.chat import create_assistant_message
 from app.schemas import ChatMessage
 from app.exceptions import LLMError
-from app.client import create_agent
+from app.provider import create_agent
 from app.config import Settings
 
 EXIT_COMMANDS = frozenset({"exit", "quit"})
@@ -54,8 +54,7 @@ def main() -> None:
         settings = Settings()
     except ValidationError:
         print(
-            "Configuration error: check "
-            "GROQ_API_KEY and LLM_MODEL."
+            "Configuration error: check your environment settings."
         )
         raise SystemExit(2) from None
 

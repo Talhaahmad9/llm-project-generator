@@ -53,12 +53,13 @@ The tests use Pydantic AI test and fake clients, including deterministic model r
 The application dependency direction is:
 
 ```text
-main.py -> chat.py -> client.py -> Groq/Pydantic AI
+main.py -> chat.py -> client.py and provider.py -> Groq/Pydantic AI
 ```
 
 - `main.py` owns the terminal loop, commands, input handling, and top-level configuration/interruption messages.
 - `chat.py` validates that submitted messages are user messages and creates assistant messages.
-- `client.py` constructs the Groq model and translates known model-run failures into `LLMError`.
+- `client.py` owns provider-independent reply execution and translates known model-run failures into `LLMError`.
+- `provider.py` constructs the Groq model and agent.
 - `config.py` loads `.env` and environment variables with Pydantic Settings, validates required values, and uses `SecretStr` for the API key.
 - `schemas.py` defines validated chat messages and their allowed roles.
 - `exceptions.py` contains the application error hierarchy.
@@ -69,7 +70,7 @@ main.py -> chat.py -> client.py -> Groq/Pydantic AI
 
 Model output is untrusted, probabilistic data. Do not use it for authorization, access control, or as a security boundary.
 
-Known configuration errors produce a concise message identifying `GROQ_API_KEY` and `LLM_MODEL`. Known model request failures produce a concise application error. Low-level exception details are intentionally not shown to terminal users; this does not mean every possible error is caught.
+Known configuration errors produce a concise provider-neutral message. Known model request failures produce a concise application error. Low-level exception details are intentionally not shown to terminal users; this does not mean every possible error is caught.
 
 ## Extending the application
 

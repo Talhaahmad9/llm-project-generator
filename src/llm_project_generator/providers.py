@@ -9,7 +9,7 @@ class ProviderSpec:
     template_name: str
 
 
-GROQ = ProviderSpec(name="groq", template_name="groq_chatbot")
+GROQ = ProviderSpec(name="groq", template_name="providers/groq")
 PROVIDERS: tuple[ProviderSpec, ...] = (GROQ,)
 
 
