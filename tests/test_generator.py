@@ -9,7 +9,7 @@ from llm_project_generator.errors import (
     UnsafeDestinationError,
 )
 from llm_project_generator.generator import generate_project, normalize_project_name
-from llm_project_generator.providers import GROQ
+from llm_project_generator.providers import GOOGLE, GROQ
 
 
 @pytest.mark.parametrize(
@@ -45,6 +45,28 @@ def test_generates_project_and_renders_name(tmp_path: Path) -> None:
     assert (destination / ".env.example").is_file()
     assert (destination / ".gitignore").is_file()
     assert (destination / "LICENSE").is_file()
+    assert not (destination / ".env").exists()
+
+
+def test_generates_google_project_with_google_metadata(tmp_path: Path) -> None:
+    destination = tmp_path / "Google_Project"
+    generate_project(destination, GOOGLE)
+
+    project = tomllib.loads(
+        (destination / "pyproject.toml").read_text(encoding="utf-8")
+    )
+    dependencies = project["project"]["dependencies"]
+    assert "pydantic-ai-slim[google]>=2.43.0" in dependencies
+    assert not any("[groq]" in dependency for dependency in dependencies)
+    assert "GOOGLE_API_KEY" in (destination / ".env.example").read_text(
+        encoding="utf-8"
+    )
+    assert "GROQ_API_KEY" not in (destination / ".env.example").read_text(
+        encoding="utf-8"
+    )
+    assert (destination / "src" / "app" / "provider.py").is_file()
+    assert (destination / "src" / "app" / "config.py").is_file()
+    assert (destination / "src" / "app" / "client.py").is_file()
     assert not (destination / ".env").exists()
 
 

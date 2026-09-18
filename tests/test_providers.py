@@ -1,7 +1,7 @@
 import pytest
 
 from llm_project_generator.errors import UnsupportedProviderError
-from llm_project_generator.providers import resolve_provider
+from llm_project_generator.providers import PROVIDERS, resolve_provider
 
 
 def test_resolves_groq_exactly() -> None:
@@ -11,7 +11,18 @@ def test_resolves_groq_exactly() -> None:
     assert provider.display_name == "Groq"
 
 
-@pytest.mark.parametrize("name", ["Groq", "GROQ", "openai", ""])
+def test_resolves_google_exactly() -> None:
+    provider = resolve_provider("google")
+    assert provider.name == "google"
+    assert provider.display_name == "Google Gemini"
+    assert provider.template_name == "providers/google"
+
+
+def test_provider_order_is_deterministic() -> None:
+    assert [provider.name for provider in PROVIDERS] == ["groq", "google"]
+
+
+@pytest.mark.parametrize("name", ["Groq", "GROQ", "Google", "GOOGLE", "gemini", "openai", ""])
 def test_rejects_unknown_or_incorrectly_cased_provider(name: str) -> None:
     with pytest.raises(UnsupportedProviderError):
         resolve_provider(name)

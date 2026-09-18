@@ -74,7 +74,7 @@ def test_interactive_menu_uses_provider_display_name(
     assert "1. Human Label" in capsys.readouterr().out
 
 
-@pytest.mark.parametrize("selection", ["", "abc", "0", "-1", "2"])
+@pytest.mark.parametrize("selection", ["", "abc", "0", "-1", "3"])
 def test_invalid_interactive_selection_prompts_again(
     selection: str,
     tmp_path: Path,
@@ -131,3 +131,27 @@ def test_help_describes_optional_interactive_provider(
     output = capsys.readouterr().out
     assert "--provider" in output
     assert "interactive selection" in output
+
+
+def test_interactive_selection_two_generates_google(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr("sys.stdin", InteractiveInput("2\n"))
+    destination = tmp_path / "google-chatbot"
+
+    assert main(["init", str(destination)]) == 0
+    assert (destination / "src" / "app" / "provider.py").is_file()
+    assert "GOOGLE_API_KEY" in (destination / ".env.example").read_text()
+
+
+def test_interactive_menu_lists_providers_in_order(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr("sys.stdin", InteractiveInput("1\n"))
+    import llm_project_generator.cli as cli
+
+    assert cli._select_provider() is not None
+    output = capsys.readouterr().out
+    assert output.index("1. Groq") < output.index("2. Google Gemini")
