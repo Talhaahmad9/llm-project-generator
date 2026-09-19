@@ -55,11 +55,13 @@ Multi-provider generation is available in version `0.2.0` and later.
 | CLI name | Display name | Environment variable | Default model | Generated dependency | Deterministic verification | Live verification |
 | --- | --- | --- | --- | --- | --- | --- |
 | `groq` | Groq | `GROQ_API_KEY` | `groq:openai/gpt-oss-120b` | `pydantic-ai-slim[groq]` | Passed | Passed |
-| `google` | Google Gemini | `GOOGLE_API_KEY` | `google:gemini-3.5-flash-lite` | `pydantic-ai-slim[google]` | Passed | Pending billing/support |
+| `google` | Google Gemini | `GOOGLE_API_KEY` | `google:gemini-3.5-flash-lite` | `pydantic-ai-slim[google]` | Passed | Passed |
 | `openai` | OpenAI | `OPENAI_API_KEY` | `openai:gpt-5.4-mini` | `pydantic-ai-slim[openai]` | Passed | Pending billing |
-| `anthropic` | Anthropic Claude | `ANTHROPIC_API_KEY` | `anthropic:claude-sonnet-5` | `pydantic-ai-slim[anthropic]` | Passed | Pending billing |
+| `anthropic` | Anthropic Claude | `ANTHROPIC_API_KEY` | `anthropic:claude-sonnet-5` | `pydantic-ai-slim[anthropic]` | Passed | Pending credits |
 
-Deterministic verification covers generation, imports, configuration, mocked provider construction, and shared chatbot behavior. Live verification covers real authentication, model availability, and provider responses. Only Groq has completed both so far.
+Deterministic verification covers generation, imports, configuration, mocked provider construction, and shared chatbot behavior. Live verification covers real authentication, model availability, and provider responses. Groq and Google Gemini have completed both so far.
+
+Google Gemini was live-verified with `gemini-3.5-flash-lite` through Google's Free Tier. Free Tier availability and rate limits may vary by project and can change over time.
 
 ## Use a generated project
 
@@ -143,7 +145,7 @@ Project names may contain ASCII letters, numbers, dots, underscores, and hyphens
 
 ## Verification status
 
-The four provider implementations have deterministic generated-suite coverage. Groq has also completed live verification. Google Gemini, OpenAI, and Anthropic Claude live checks remain pending billing/support availability, so this preview does not claim all providers are production-ready or live-verified.
+The four provider implementations have deterministic generated-suite coverage. Groq and Google Gemini have also completed live verification. OpenAI and Anthropic Claude live checks remain pending billing or credit availability, so this preview does not claim that every provider is production-ready or live-verified.
 
 ## Development
 
@@ -159,9 +161,9 @@ CI generates and tests all four provider projects without provider credentials.
 
 ## Limitations and roadmap
 
-This preview provides a terminal interface only, generates one provider per project, requires Python 3.13+, does not create API keys, does not overwrite existing destinations, and does not make live calls in automated tests. Three live-verification checks are pending.
+This preview provides a terminal interface only, generates one provider per project, requires Python 3.13+, does not create API keys, does not overwrite existing destinations, and does not make live calls in automated tests. Two live-verification checks are pending.
 
-The next milestones are to complete remaining live verification and prepare the criteria for `1.0.0`. Future work such as FastAPI or RAG belongs to separate product milestones; it is not part of the generated chatbot today.
+The next milestones are to complete OpenAI and Anthropic Claude live verification and prepare the criteria for `1.0.0`. Future work such as FastAPI or RAG belongs to separate product milestones; it is not part of the generated chatbot today.
 
 ## Contributing
 
